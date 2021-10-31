@@ -1,0 +1,15 @@
+A] Fetch max viewcount
+SELECT MAX(ViewCount) AS maxViewCount
+FROM Posts; 
+
+B] Fetch first set of posts
+SELECT TOP 50000 * from Posts where Posts.ViewCount BETWEEN 10000 AND 10030841 order by Posts.ViewCount DESC 
+
+C] Fetch second set of posts
+SELECT TOP 50000 * from Posts where Posts.ViewCount BETWEEN 5000 AND 9999 order by Posts.ViewCount DESC 
+
+D] Fetch third set of posts 
+SELECT TOP 50000 * from Posts where Posts.ViewCount BETWEEN 1000 AND 4999 order by Posts.ViewCount DESC 
+
+E] Fetch fourth set of posts
+SELECT TOP 50000 * from Posts where Posts.ViewCount BETWEEN 10 AND 999 order by Posts.ViewCount DESC 
