@@ -1,0 +1,17 @@
+A] Hive Table Creation 
+CREATE TABLE IF NOT EXISTS salstackexchangeposts(PostId int, MPostTypeId tinyint, AcceptedResultId int, PostParentId int, PostCreateDate timestamp, PostDelDate timestamp, PostScore int, PostViewCounts int, PostMainBody string, PostOwnUserId int, OwnerDisplayName varchar(40), PostLastEditUserId int, PostLastEditDisplayName varchar(40), LastEditDate timestamp, LastActivityDate timestamp, PostTitle varchar (250), PostLabelTags varchar (250), AnswerCount int, CommentCount int, FavoriteCount int, ClosedDate timestamp, CommunityOwnedDate timestamp, ContentLicense varchar (12)) ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde';
+
+B] File loading from GCP bucket 
+LOAD DATA INPATH 'gs://dataproc-staging-us-central1-94995679090-hfp0wgor/saloni-cloud/stackexchange_posts_records.csv' INTO TABLE salstackexchangeposts;
+
+C] View Creation 
+CREATE VIEW IF NOT EXISTS salstackexchangeview as select cast(PostId as int) as PostId, cast(MPostTypeId as tinyint) as MPostTypeId, AcceptedResultId , PostParentId , PostCreateDate , PostDelDate , cast(PostScore as int) as PostScore, cast(PostViewCounts as int) as PostViewCounts, PostMainBody, cast(PostOwnUserId as int) as PostOwnUserId, OwnerDisplayName as DisplayName, PostLastEditUserId, PostLastEditDisplayName , LastEditDate , LastActivityDate , PostTitle , PostLabelTags , AnswerCount , CommentCount , FavoriteCount , ClosedDate , CommunityOwnedDate , ContentLicense from salstackexchangeposts;
+
+D] Write a query to fetch the top 10 posts by score 
+SELECT PostId, PostTitle, PostScore from salstackexchangeview ORDER BY PostScore DESC LIMIT 10;
+
+E] Write a query to fetch The top 10 users by post score
+SELECT PostId,DisplayName,sum(PostScore) as PostScore from salstackexchangeview GROUP BY PostId,   ORDER BY PostScore DESC LIMIT 10;
+
+F] Write a query to find the number of distinct users, who used the word “cloud” in one of their posts
+SELECT COUNT(DISTINCT PostId) as TotalDistinctUsers FROM salstackexchangeview WHERE PostTitle LIKE '% cloud %' OR PostMainBody LIKE '% cloud %';
